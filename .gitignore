@@ -1,0 +1,16 @@
+# build artifacts
+/bin/
+*.out
+*.test
+
+# local config (may contain secrets)
+config.local.yaml
+*.local.yaml
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# oh-my-claudecode runtime state
+.omc/

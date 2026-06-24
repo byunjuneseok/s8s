@@ -1,0 +1,14 @@
+version: "2"
+
+# Default linters (errcheck, govet, ineffassign, staticcheck, unused) are
+# enabled automatically in golangci-lint v2; we add a few extras below.
+linters:
+  enable:
+    - revive
+    - misspell
+    - unconvert
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
