@@ -13,23 +13,26 @@ var version = "dev"
 const usageText = `s8s — a terminal UI for securities accounts and trading.
 
 Usage:
+  s8s configure    create or update a context in the config file
   s8s version      print the version
   s8s help         print this help
 `
 
 func main() {
-	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
+	os.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))
 }
 
 // run executes the CLI and returns the process exit code. It is kept separate
 // from main so it can be exercised in tests.
-func run(args []string, stdout, stderr io.Writer) int {
+func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
 		_, _ = io.WriteString(stdout, usageText)
 		return 0
 	}
 
 	switch args[0] {
+	case "configure":
+		return runConfigure(args[1:], stdin, stdout, stderr)
 	case "version", "--version", "-v":
 		_, _ = fmt.Fprintf(stdout, "s8s %s\n", version)
 		return 0
