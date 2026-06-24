@@ -43,8 +43,8 @@ func TestRunConfigureNonInteractive(t *testing.T) {
 	args := []string{
 		"--context", "toss-main",
 		"--type", "toss",
-		"--client-id", "my-id",
-		"--client-secret", "my-secret",
+		"--api-key", "my-id",
+		"--secret-key", "my-secret",
 		"--non-interactive",
 	}
 	var stdout, stderr bytes.Buffer

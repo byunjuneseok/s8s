@@ -30,13 +30,13 @@ func runConfigure(args []string, stdin io.Reader, stdout, stderr io.Writer) int 
 	fs := flag.NewFlagSet("configure", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	var (
-		ctxName  = fs.String("context", "", "context name to create or update")
-		typ      = fs.String("type", "toss", "broker type")
-		clientID = fs.String("client-id", "", "OAuth client id")
-		secret   = fs.String("client-secret", "", "OAuth client secret")
-		readOnly = fs.Bool("read-only", false, "block order operations in this context")
-		setCur   = fs.Bool("set-current", false, "make this the current context")
-		noInt    = fs.Bool("non-interactive", false, "do not prompt; require flags")
+		ctxName   = fs.String("context", "", "context name to create or update")
+		typ       = fs.String("type", "toss", "broker type")
+		apiKey    = fs.String("api-key", "", "API Key (OAuth client id)")
+		secretKey = fs.String("secret-key", "", "Secret Key (OAuth client secret)")
+		readOnly  = fs.Bool("read-only", false, "block order operations in this context")
+		setCur    = fs.Bool("set-current", false, "make this the current context")
+		noInt     = fs.Bool("non-interactive", false, "do not prompt; require flags")
 	)
 	if err := fs.Parse(args); err != nil {
 		return 2
@@ -45,8 +45,8 @@ func runConfigure(args []string, stdin io.Reader, stdout, stderr io.Writer) int 
 	opts := configureOptions{
 		context:        strings.TrimSpace(*ctxName),
 		brokerType:     strings.TrimSpace(*typ),
-		clientID:       strings.TrimSpace(*clientID),
-		clientSecret:   *secret,
+		clientID:       strings.TrimSpace(*apiKey),
+		clientSecret:   *secretKey,
 		readOnly:       *readOnly,
 		setCurrent:     *setCur,
 		nonInteractive: *noInt,
@@ -61,10 +61,10 @@ func runConfigure(args []string, stdin io.Reader, stdout, stderr io.Writer) int 
 			opts.brokerType = promptLine(reader, stdout, "Broker type", "toss")
 		}
 		if opts.clientID == "" {
-			opts.clientID = promptLine(reader, stdout, "Client ID", "")
+			opts.clientID = promptLine(reader, stdout, "API Key", "")
 		}
 		if opts.clientSecret == "" {
-			opts.clientSecret = promptSecret(reader, stdin, stdout, "Client secret")
+			opts.clientSecret = promptSecret(reader, stdin, stdout, "Secret Key")
 		}
 	}
 
@@ -72,7 +72,7 @@ func runConfigure(args []string, stdin io.Reader, stdout, stderr io.Writer) int 
 		opts.brokerType = "toss"
 	}
 	if opts.context == "" || opts.clientID == "" || opts.clientSecret == "" {
-		_, _ = fmt.Fprintln(stderr, "configure: --context, --client-id and --client-secret are required")
+		_, _ = fmt.Fprintln(stderr, "configure: --context, --api-key and --secret-key are required")
 		return 2
 	}
 
