@@ -73,6 +73,14 @@ func (r OrderRequest) Validate() error {
 	return nil
 }
 
+// OrderModification describes the changes to apply to an existing order.
+type OrderModification struct {
+	// Price is the new limit price.
+	Price Money
+	// Quantity is the new order quantity.
+	Quantity decimal.Decimal
+}
+
 // Order is a placed order as reported by the broker.
 type Order struct {
 	ID             string
