@@ -13,6 +13,7 @@ var version = "dev"
 const usageText = `s8s — a terminal UI for securities accounts and trading.
 
 Usage:
+  s8s              launch the interactive UI
   s8s configure    create or update a context in the config file
   s8s version      print the version
   s8s help         print this help
@@ -26,8 +27,7 @@ func main() {
 // from main so it can be exercised in tests.
 func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		_, _ = io.WriteString(stdout, usageText)
-		return 0
+		return runTUI(stderr)
 	}
 
 	switch args[0] {

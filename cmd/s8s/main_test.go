@@ -14,7 +14,6 @@ func TestRun(t *testing.T) {
 		wantOut  string // substring expected in stdout
 		wantErr  string // substring expected in stderr
 	}{
-		{name: "no args prints usage", args: nil, wantCode: 0, wantOut: "Usage:"},
 		{name: "version", args: []string{"version"}, wantCode: 0, wantOut: "s8s "},
 		{name: "version flag", args: []string{"--version"}, wantCode: 0, wantOut: "s8s "},
 		{name: "help", args: []string{"help"}, wantCode: 0, wantOut: "Usage:"},
