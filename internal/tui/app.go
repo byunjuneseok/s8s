@@ -112,6 +112,14 @@ func (a *App) Run() error {
 // Stop ends the UI event loop.
 func (a *App) Stop() { a.app.Stop() }
 
+// Flash shows a transient message in the status bar. It is replaced the next
+// time the status bar refreshes (e.g. on a screen switch).
+func (a *App) Flash(msg string) { a.flashStatus(msg) }
+
+// QueueUpdate runs fn on the UI goroutine and redraws. It is safe to call from
+// background goroutines; use it to apply results of async work to the UI.
+func (a *App) QueueUpdate(fn func()) { a.app.QueueUpdateDraw(fn) }
+
 func (a *App) registerBuiltins() {
 	a.commands["quit"] = func([]string) { a.app.Stop() }
 	a.commands["q"] = a.commands["quit"]

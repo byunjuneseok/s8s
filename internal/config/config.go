@@ -19,6 +19,8 @@ type Config struct {
 	Contexts       []Context      `yaml:"contexts"`
 	Brokers        []BrokerConfig `yaml:"brokers"`
 	Credentials    []Credential   `yaml:"credentials"`
+	// Watchlist is the set of symbols shown on the :watch screen.
+	Watchlist []string `yaml:"watchlist,omitempty"`
 }
 
 // Context names a broker to use and how to treat it.
