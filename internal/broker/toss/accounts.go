@@ -24,7 +24,7 @@ func (d accountDTO) toDomain() domain.Account {
 
 // Accounts implements broker.Broker.
 func (c *Client) Accounts(ctx context.Context) ([]domain.Account, error) {
-	dtos, err := getJSON[[]accountDTO](ctx, c, accountsPath, nil)
+	dtos, err := getJSON[[]accountDTO](ctx, c, accountsPath, nil, nil)
 	if err != nil {
 		return nil, err
 	}

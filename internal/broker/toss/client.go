@@ -8,8 +8,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/byunjuneseok/s8s/internal/domain"
 )
 
 // Client is the shared HTTP layer for the Toss Open API. It injects the bearer
@@ -81,7 +84,15 @@ type apiResponse[T any] struct {
 	Result T `json:"result"`
 }
 
-func (c *Client) doRaw(ctx context.Context, method, path string, query url.Values, body []byte, contentType string) ([]byte, error) {
+// accountHeader carries the target account's accountSeq on account-scoped calls.
+const accountHeader = "X-Tossinvest-Account"
+
+// accountHeaders builds the per-request headers selecting the given account.
+func accountHeaders(acct domain.Account) map[string]string {
+	return map[string]string{accountHeader: strconv.FormatInt(acct.Seq, 10)}
+}
+
+func (c *Client) doRaw(ctx context.Context, method, path string, query url.Values, headers map[string]string, body []byte, contentType string) ([]byte, error) {
 	tok, err := c.tokens.Token(ctx)
 	if err != nil {
 		return nil, err
@@ -103,6 +114,9 @@ func (c *Client) doRaw(ctx context.Context, method, path string, query url.Value
 	req.Header.Set("Accept", "application/json")
 	if contentType != "" {
 		req.Header.Set("Content-Type", contentType)
+	}
+	for k, v := range headers {
+		req.Header.Set(k, v)
 	}
 
 	resp, err := c.httpClient.Do(req)
@@ -142,9 +156,9 @@ func (c *Client) captureRateLimits(h http.Header) {
 }
 
 // getJSON performs a GET and unwraps the envelope's result into T.
-func getJSON[T any](ctx context.Context, c *Client, path string, query url.Values) (T, error) {
+func getJSON[T any](ctx context.Context, c *Client, path string, query url.Values, headers map[string]string) (T, error) {
 	var zero T
-	data, err := c.doRaw(ctx, http.MethodGet, path, query, nil, "")
+	data, err := c.doRaw(ctx, http.MethodGet, path, query, headers, nil, "")
 	if err != nil {
 		return zero, err
 	}
@@ -156,13 +170,13 @@ func getJSON[T any](ctx context.Context, c *Client, path string, query url.Value
 }
 
 // postJSON performs a POST with a JSON body and unwraps the result into T.
-func postJSON[T any](ctx context.Context, c *Client, path string, payload any) (T, error) {
+func postJSON[T any](ctx context.Context, c *Client, path string, headers map[string]string, payload any) (T, error) {
 	var zero T
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return zero, fmt.Errorf("toss: encode %s payload: %w", path, err)
 	}
-	data, err := c.doRaw(ctx, http.MethodPost, path, nil, body, "application/json")
+	data, err := c.doRaw(ctx, http.MethodPost, path, nil, headers, body, "application/json")
 	if err != nil {
 		return zero, err
 	}

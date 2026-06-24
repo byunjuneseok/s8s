@@ -42,7 +42,7 @@ func TestGetJSONUnwrapsEnvelopeAndAuth(t *testing.T) {
 	defer srv.Close()
 
 	c := newTestClient(t, srv)
-	got, err := getJSON[sample](context.Background(), c, "/api/v1/prices", nil)
+	got, err := getJSON[sample](context.Background(), c, "/api/v1/prices", nil, nil)
 	if err != nil {
 		t.Fatalf("getJSON: %v", err)
 	}
@@ -67,7 +67,7 @@ func TestGetJSONAPIError(t *testing.T) {
 	defer srv.Close()
 
 	c := newTestClient(t, srv)
-	_, err := getJSON[sample](context.Background(), c, "/api/v1/prices", nil)
+	_, err := getJSON[sample](context.Background(), c, "/api/v1/prices", nil, nil)
 	if err == nil {
 		t.Fatal("getJSON = nil error, want APIError")
 	}
@@ -94,7 +94,7 @@ func TestPostJSONRoundTrip(t *testing.T) {
 	defer srv.Close()
 
 	c := newTestClient(t, srv)
-	got, err := postJSON[sample](context.Background(), c, "/api/v1/orders", map[string]string{"symbol": "AAPL"})
+	got, err := postJSON[sample](context.Background(), c, "/api/v1/orders", nil, map[string]string{"symbol": "AAPL"})
 	if err != nil {
 		t.Fatalf("postJSON: %v", err)
 	}
