@@ -80,6 +80,14 @@ func (a *App) AddScreen(name string, p tview.Primitive) {
 	a.screens = append(a.screens, name)
 }
 
+// AddMessageScreen registers a simple centered text screen, useful for
+// informational states such as "no context configured".
+func (a *App) AddMessageScreen(name, msg string) {
+	tv := tview.NewTextView().SetText(msg).SetTextAlign(tview.AlignCenter)
+	tv.SetBorder(true)
+	a.AddScreen(name, tv)
+}
+
 // Show switches the body to the named screen.
 func (a *App) Show(name string) {
 	if a.body.HasPage(name) {
