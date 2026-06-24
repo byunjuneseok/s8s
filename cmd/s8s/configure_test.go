@@ -93,7 +93,7 @@ func TestRunConfigureInteractive(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Resolve: %v", err)
 	}
-	if r.Context.Name != "toss-main" || r.Credential.ClientID != "the-id" || r.Credential.ClientSecret != "the-secret" {
-		t.Errorf("resolved = %+v, want toss-main/the-id/the-secret", r)
+	if r.Context.Name != "default" || r.Credential.ClientID != "the-id" || r.Credential.ClientSecret != "the-secret" {
+		t.Errorf("resolved = %+v, want default/the-id/the-secret", r)
 	}
 }

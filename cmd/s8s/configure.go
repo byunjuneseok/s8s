@@ -55,7 +55,7 @@ func runConfigure(args []string, stdin io.Reader, stdout, stderr io.Writer) int 
 	reader := bufio.NewReader(stdin)
 	if !opts.nonInteractive {
 		if opts.context == "" {
-			opts.context = promptLine(reader, stdout, "Context name", "toss-main")
+			opts.context = promptLine(reader, stdout, "Context name", "default")
 		}
 		if opts.brokerType == "" {
 			opts.brokerType = promptLine(reader, stdout, "Broker type", "toss")
